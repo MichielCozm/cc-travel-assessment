@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Compliance Assessment | Computacenter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cc-blue:      #244991;
+    --cc-blue-hover:#1d3b78;
+    --cc-blue-light:#eef3fa;
+    --cc-blue-sec:  #2d9edf;
+    --cc-navy:      #1a2d6b;
+    --cc-navy-deep: #132050;
+    --cc-grey:      #575656;
+    --cc-green:     #8FD400;
+    --cc-green-dark:#6aab00;
+    --cc-white:     #FFFFFF;
+
+    --bg-primary:   #f5f7fa;
+    --bg-card:      #FFFFFF;
+    --bg-nav:       rgba(255,255,255,0.95);
+    --text-primary: #1a2d6b;
+    --text-secondary:#5f6b7a;
+    --text-muted:   #8c95a4;
+    --border:       #e2e6ed;
+    --border-light: #eef0f4;
+
+    --green:  #16a34a;
+    --amber:  #d97706;
+    --red:    #dc2626;
+
+    --green-bg:  #f0fdf4;  --green-border: #bbf7d0;
+    --amber-bg:  #fffbeb;  --amber-border: #fde68a;
+    --red-bg:    #fef2f2;  --red-border:   #fecaca;
+
+    --radius:    8px;
+    --radius-sm: 6px;
+    --shadow:    0 1px 3px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.03);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.07);
+    --transition: .2s ease;
+  }
+
+  [data-theme="dark"] {
+    --bg-primary:     #0e1525;
+    --bg-card:        #162035;
+    --bg-nav:         rgba(14,21,37,0.95);
+    --text-primary:   #dfe5f0;
+    --text-secondary: #8d99b0;
+    --text-muted:     #5d6a82;
+    --border:         #263050;
+    --border-light:   #1c2842;
+    --green-bg:  #052e16;  --green-border: #166534;
+    --amber-bg:  #451a03;  --amber-border: #92400e;
+    --red-bg:    #450a0a;  --red-border:   #991b1b;
+    --shadow:    0 1px 3px rgba(0,0,0,.2);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.3);
+  }
+
+  html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Nav ─────────────────────────────────────── */
+  .nav {
+    background: var(--bg-nav);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+  .nav-left { display: flex; align-items: center; gap: 16px; }
+  .nav-logo { display: flex; align-items: center; text-decoration: none; }
+  .nav-logo-svg { height: 36px; width: auto; display: block; }
+  [data-theme="dark"] .nav-logo-svg .cc-dark { fill: #c5d4f0; }
+  [data-theme="dark"] .nav-logo-svg .cc-light { fill: #7fb8e8; }
+
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .theme-toggle {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--bg-primary); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: .9rem; color: var(--text-secondary);
+    transition: var(--transition);
+  }
+  .theme-toggle:hover { border-color: var(--cc-blue); color: var(--cc-blue); }
+
+  /* ── Scenario Tabs ──────────────────────────── */
+  .scenario-tabs {
+    display: flex; align-items: center; gap: 4px;
+    margin-left: 24px;
+  }
+  .scenario-tab {
+    font-family: inherit;
+    font-size: .72rem; font-weight: 600;
+    padding: 6px 14px; border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer; transition: var(--transition);
+    white-space: nowrap;
+  }
+  .scenario-tab:hover { border-color: var(--cc-blue); color: var(--cc-blue); }
+  .scenario-tab.active {
+    background: var(--cc-blue); color: white;
+    border-color: var(--cc-blue);
+  }
+
+  /* ── Main Content ───────────────────────────── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* ── Scenario Header ────────────────────────── */
+  .scenario-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 10px 0;
+    flex-shrink: 0;
+  }
+  .scenario-title {
+    font-size: 1rem; font-weight: 800;
+    color: var(--text-primary); letter-spacing: -.01em;
+  }
+  .scenario-route {
+    font-size: .78rem; color: var(--text-secondary); font-weight: 500;
+  }
+  .scenario-badge {
+    font-size: .65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; padding: 3px 10px; border-radius: 100px;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .badge-simple   { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-intermediate { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .badge-complex  { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+  .scenario-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: .72rem; color: var(--text-muted);
+  }
+  .scenario-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+
+  /* ── Grid ────────────────────────────────────── */
+  .compliance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+    padding-bottom: 8px;
+  }
+
+  /* ── Compliance Card ────────────────────────── */
+  .compliance-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: box-shadow var(--transition);
+  }
+  .compliance-card:hover { box-shadow: var(--shadow-md); }
+
+  .card-top-bar {
+    height: 3px; flex-shrink: 0;
+  }
+  .card-top-bar.green { background: linear-gradient(90deg, var(--green), #4ade80); }
+  .card-top-bar.amber { background: linear-gradient(90deg, var(--amber), #f59e0b); }
+  .card-top-bar.red   { background: linear-gradient(90deg, var(--red), #f87171); }
+
+  .card-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px 6px;
+    flex-shrink: 0;
+  }
+  .card-icon {
+    width: 28px; height: 28px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; flex-shrink: 0;
+  }
+  .card-icon.green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .card-icon.amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .card-icon.red   { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+  .card-category {
+    font-size: .68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--text-muted);
+  }
+  .card-status-pill {
+    margin-left: auto;
+    font-size: .6rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .04em; padding: 2px 8px; border-radius: 100px;
+  }
+  .card-status-pill.green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .card-status-pill.amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .card-status-pill.red   { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+  .card-summary {
+    padding: 4px 12px 8px;
+    font-size: .75rem; line-height: 1.5;
+    color: var(--text-primary); font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  /* ── Collapsible Detail ─────────────────────── */
+  .detail-toggle {
+    font-family: inherit;
+    width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 12px;
+    background: var(--bg-primary);
+    border: none; border-top: 1px solid var(--border-light);
+    font-size: .68rem; font-weight: 600; color: var(--text-muted);
+    cursor: pointer; transition: var(--transition);
+    flex-shrink: 0;
+  }
+  .detail-toggle:hover { color: var(--cc-blue); background: var(--cc-blue-light); }
+  [data-theme="dark"] .detail-toggle:hover { background: rgba(45,158,223,.08); }
+  .detail-toggle .chevron {
+    font-size: .6rem; transition: transform .2s ease;
+  }
+  .detail-toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+  .detail-body {
+    max-height: 0; overflow-y: auto;
+    transition: max-height .3s ease;
+    border-top: 0px solid transparent;
+  }
+  .detail-body.open {
+    max-height: 350px;
+    border-top: 1px solid var(--border-light);
+  }
+  .detail-content {
+    padding: 8px 12px 10px;
+    font-size: .7rem; line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .detail-content ul {
+    margin: 4px 0; padding-left: 14px;
+  }
+  .detail-content li {
+    margin-bottom: 3px;
+  }
+  .detail-content strong {
+    color: var(--text-primary); font-weight: 600;
+  }
+  .detail-content .detail-section {
+    margin-bottom: 6px;
+  }
+  .detail-content .detail-section-title {
+    font-size: .65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--text-muted); margin-bottom: 2px;
+  }
+
+  /* ── Footer ─────────────────────────────────── */
+  .footer {
+    flex-shrink: 0;
+    text-align: center; padding: 8px 24px;
+    font-size: .68rem; color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+  .footer a { color: var(--cc-blue); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* ── Responsive ─────────────────────────────── */
+  @media (max-width: 1100px) {
+    .compliance-grid { grid-template-columns: repeat(2, 1fr); }
+    body { overflow: auto; height: auto; min-height: 100vh; }
+    .main { overflow: visible; }
+  }
+  @media (max-width: 600px) {
+    .compliance-grid { grid-template-columns: 1fr; }
+    .scenario-tabs { flex-wrap: wrap; margin-left: 0; margin-top: 4px; }
+    .nav { flex-wrap: wrap; height: auto; padding: 8px 16px; gap: 4px; }
+    .main { padding: 8px 12px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0s !important; animation: none !important; }
+  }
+</style>
+</head>
+
+<body>
+
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-left">
+    <a href="#" class="nav-logo" aria-label="Computacenter Home">
+      <svg class="nav-logo-svg" viewBox=".133 .132 40.373 20.587" xmlns="http://www.w3.org/2000/svg">
+        <path class="cc-light" d="m18.699 6.756a1.994 1.994 0 0 1 0-3.988v-.864a2.858 2.858 0 1 0 0 5.716z" fill="#2d9edf"/>
+        <path class="cc-dark" d="m18.699 8.25a3.488 3.488 0 0 1 0-6.976v-1.142a4.63 4.63 0 1 0 0 9.26z" fill="#244991"/>
+        <path class="cc-light" d="m21.94 6.756a1.994 1.994 0 0 0 0-3.988v-.864a2.858 2.858 0 1 1 0 5.716z" fill="#2d9edf"/>
+        <path class="cc-dark" d="m21.94 8.25a3.488 3.488 0 0 0 0-6.976v-1.142a4.63 4.63 0 1 1 0 9.26zm-.464-6.847a1.157 1.157 0 1 1 -2.314.001 1.157 1.157 0 0 1 2.314 0" fill="#244991"/>
+        <path class="cc-dark" d="m10.156 18.17v-3.88c0-.379-.164-.705-.4-.705-.248 0-.412.326-.412.704v3.88h-1.02v-3.88c0-.378-.164-.704-.4-.704-.247 0-.412.326-.412.704v3.88h-1.018v-5.425h.936v.284l.32-.326c.05-.011.081-.011.174-.011.34 0 .669.126.916.368.247-.274.555-.368.915-.368.865 0 1.42.6 1.42 1.893v3.585zm2.908-4.617c-.133 0-.288.168-.329.294v3.418c.391-.136.855-.715.855-2.313 0-.863-.237-1.399-.526-1.399m-.329 4.616v2.55h-1.018v-7.976h.956v.285l.31-.327c.05-.01.112-.01.133-.01.802 0 1.502.704 1.502 2.45 0 2.397-1.43 2.955-1.883 3.028m7.401.001c-.566 0-1.523-.295-1.523-2.104v-2.429h-.339v-.893h.35v-1.416h.966v1.416h.783v.893h-.74v2.597c0 .81.267 1.094.616 1.094.082 0 .165-.01.237-.02v.83s-.165.031-.35.031m2.356-3.227c-.175.02-.68.483-.68 1.503 0 .651.196.914.371.914.155 0 .267-.178.309-.304zm.072 3.227v-.325l-.34.357c-.061.021-.113.021-.154.021-.648 0-1.235-.747-1.235-1.777 0-1.682 1.214-2.293 1.657-2.356v-.105c0-.315-.175-.452-.443-.452-.257 0-.432.032-.658.095v-.842s.298-.094.751-.094c.782 0 1.368.378 1.368 1.577v3.901zm3.176.053c-.413 0-1.78-.295-1.78-2.766 0-2.47 1.367-2.765 1.78-2.765.308 0 .482.042.482.042v.82c-.123-.021-.174-.021-.308-.021-.34 0-.926.315-.926 1.924s.586 1.924.926 1.924c.134 0 .195 0 .32-.02v.82s-.186.042-.495.042m2.096-4.712c-.237 0-.443.317-.443 1.652 0 .105 0 .19.01.263.298-.022.72-.494.72-1.23 0-.495-.102-.684-.287-.684m-.391 2.755c.05.8.37 1.114.71 1.114.133 0 .216 0 .308-.02v.82a1.87 1.87 0 0 1 -.39.042c-.731 0-1.698-.452-1.698-2.777 0-2.407.895-2.754 1.471-2.754.546 0 1.224.42 1.224 1.567 0 1.356-1.142 1.966-1.625 2.008m3.971 1.904v-3.88c0-.379-.165-.705-.402-.705-.247 0-.411.326-.411.704v3.88h-1.018v-5.425h.936v.284l.318-.326c.053-.011.083-.011.175-.011.875 0 1.42.6 1.42 1.893v3.585zm3.227 0c-.566 0-1.523-.295-1.523-2.104v-2.429h-.34v-.893h.35v-1.416h.968v1.416h.781v.893h-.74v2.597c0 .81.267 1.094.617 1.094.082 0 .165-.01.237-.02v.83s-.165.031-.35.031m2.139-4.659c-.236 0-.441.317-.441 1.652 0 .105 0 .19.01.263.299-.022.72-.494.72-1.23 0-.495-.103-.684-.288-.684m-.391 2.755c.051.8.37 1.114.71 1.114.134 0 .216 0 .309-.02v.82a1.87 1.87 0 0 1 -.391.042c-.73 0-1.698-.452-1.698-2.777 0-2.407.895-2.754 1.471-2.754.545 0 1.224.42 1.224 1.567 0 1.356-1.142 1.966-1.625 2.008m3.992-2.629c-.484 0-.834.4-.834 1.042v3.49h-1.018v-5.425h.967v.43a.948.948 0 0 1 .823-.43h.185v.893zm-23.604-.893v3.88c0 .378-.165.704-.402.704-.246 0-.412-.326-.412-.704v-3.88h-1.018v3.585c0 1.293.704 1.889 1.525 1.889.774 0 1.325-.804 1.325-1.889v-3.585zm-14.466 5.486c-.823 0-2.18-.423-2.18-3.403 0-2.43 1.288-3.49 2.311-3.474.419.006.566.11.566.11v.873s-.163-.114-.56-.099c-.813.03-1.217 1.474-1.217 2.59 0 2.313.782 2.508 1.265 2.508.134 0 .237-.02.35-.041v.862s-.226.073-.535.073m2.214-4.637c-.237 0-.473.368-.473 1.872s.236 1.871.473 1.871.484-.368.484-1.871-.247-1.872-.484-1.872m0 4.637c-.514 0-1.502-.305-1.502-2.765s.988-2.766 1.502-2.766c.525 0 1.503.305 1.503 2.766 0 2.46-.978 2.765-1.503 2.765" fill="#244991"/>
+      </svg>
+    </a>
+    <div class="scenario-tabs" id="scenarioTabs"></div>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9790;</span>
+    </button>
+  </div>
+</nav>
+
+<main class="main" id="mainContent">
+  <div class="scenario-header" id="scenarioHeader"></div>
+  <div class="compliance-grid" id="complianceGrid"></div>
+</main>
+
+<footer class="footer">
+  <span id="footerRef">TC-2026-00847</span> &nbsp;&middot;&nbsp; &copy; 2026 Computacenter plc &nbsp;&middot;&nbsp; <a href="#">Privacy</a> &nbsp;&middot;&nbsp; <a href="#">Travel Policy</a>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ── Theme Toggle ─────────────────────────── */
+  var themeToggle = document.getElementById('themeToggle');
+  var themeIcon = document.getElementById('themeIcon');
+  var html = document.documentElement;
+
+  function setTheme(t) {
+    html.setAttribute('data-theme', t);
+    themeIcon.textContent = t === 'dark' ? '\u2600' : '\u263E';
+    localStorage.setItem('cc-theme', t);
+  }
+  themeToggle.addEventListener('click', function() {
+    setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+  var saved = localStorage.getItem('cc-theme');
+  if (saved) setTheme(saved);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+  /* ── Icons ────────────────────────────────── */
+  var icons = {
+    immigration: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="2" width="12" height="10" rx="1.5"/><circle cx="5" cy="6" r="1.5"/><path d="M8 5h3M8 8h3"/></svg>',
+    pwd: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 4h12M3 7h8M5 10h4"/></svg>',
+    socsec: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1L1 4v4c0 3.3 2.6 5.5 6 6 3.4-.5 6-2.7 6-6V4L7 1z"/></svg>',
+    tax: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="1" width="10" height="12" rx="1.5"/><path d="M5 4h4M5 7h4M5 10h2"/></svg>'
+  };
+
+  /* ── Scenario Data ────────────────────────── */
+  var scenarios = [
+    {
+      id: 'simple',
+      tab: '1 \u2014 Simple',
+      title: 'Scenario 1: Simple \u2014 Internal Meetings (US)',
+      route: 'Germany \u2192 California & Atlanta (US)',
+      employee: 'German national',
+      duration: '10 days total, twice/year',
+      complexity: 'simple',
+      categories: [
+        {
+          key: 'immigration', label: 'Immigration', icon: icons.immigration,
+          status: 'green', statusLabel: 'Low risk',
+          summary: 'ESTA / Visa Waiver Program eligible. German national attending internal meetings only \u2014 no work visa required.',
+          details: '<ul><li><strong>Visa type:</strong> ESTA (Visa Waiver Program)</li><li><strong>Eligibility:</strong> German nationals qualify for ESTA for business meetings, conferences, and consultations</li><li><strong>Duration:</strong> Up to 90 days per entry</li><li><strong>Activity:</strong> Internal meetings only \u2014 no productive work on US soil</li><li><strong>Restriction:</strong> Must not receive US-source salary for work performed in the US under ESTA</li></ul>'
+        },
+        {
+          key: 'pwd', label: 'Posted Worker / PWD', icon: icons.pwd,
+          status: 'green', statusLabel: 'N/A',
+          summary: 'Not applicable. The US is not subject to EU Posted Workers Directive requirements.',
+          details: '<ul><li>The Posted Workers Directive (96/71/EC) and its enforcement directive (2014/67/EU) apply only to postings within the EU/EEA</li><li>No PWD notification, minimum wage, or CBA obligations for US travel</li></ul>'
+        },
+        {
+          key: 'socsec', label: 'Social Security', icon: icons.socsec,
+          status: 'amber', statusLabel: 'Action needed',
+          summary: 'Germany\u2013US Totalization Agreement applies. Certificate of Coverage (CoC) recommended to avoid dual contributions.',
+          details: '<ul><li><strong>Agreement:</strong> US\u2013Germany Totalization Agreement in force</li><li><strong>Recommendation:</strong> Obtain Certificate of Coverage (CoC) from Deutsche Rentenversicherung Bund</li><li><strong>Purpose:</strong> Proves continued German social security coverage, avoids US FICA deductions</li><li><strong>Duration covered:</strong> Typically up to 5 years for temporary assignments</li><li><strong>Processing time:</strong> Allow 4\u20136 weeks</li></ul>'
+        },
+        {
+          key: 'tax', label: 'Tax & Payroll', icon: icons.tax,
+          status: 'red', statusLabel: 'Action required',
+          summary: 'US federal and state filing obligations triggered. Shadow payroll and SSN/ITIN required.',
+          details: '<div class="detail-section"><div class="detail-section-title">Federal</div><ul><li>US federal income tax filing required for days worked on US soil</li><li>SSN or ITIN needed for filing</li><li>Shadow payroll required to report US-source compensation</li></ul></div><div class="detail-section"><div class="detail-section-title">California</div><ul><li>CA state filing required \u2014 no treaty exemption recognised by CA</li><li>CA withholding required if wages exceed $1,500 or employee works >45 days in CA</li><li>California sources income based on duty days ratio</li></ul></div><div class="detail-section"><div class="detail-section-title">Georgia</div><ul><li>GA state filing required if GA-source wages exceed $5,000</li><li>GA withholding required if employee works >23 days in GA</li><li>Lower threshold than many states</li></ul></div><div class="detail-section"><div class="detail-section-title">Crowe recommendation</div><ul><li>Obtain SSN/ITIN prior to first travel</li><li>Set up shadow payroll with US payroll provider</li><li>Track actual days of physical presence per state</li></ul></div>'
+        }
+      ]
+    },
+    {
+      id: 'intermediate',
+      tab: '2 \u2014 Intermediate',
+      title: 'Scenario 2: Intermediate \u2014 Knowledge Transfer (India)',
+      route: 'Germany \u2192 India',
+      employee: 'German national',
+      duration: '3 weeks \u00d7 2 visits in 12 months',
+      complexity: 'intermediate',
+      categories: [
+        {
+          key: 'immigration', label: 'Immigration', icon: icons.immigration,
+          status: 'red', statusLabel: 'Visa required',
+          summary: 'Business/Employment visa required for India. Working at a client site triggers employment visa requirements.',
+          details: '<ul><li><strong>Visa type:</strong> Employment Visa (E-visa) or Business Visa depending on exact activities</li><li><strong>Client site work:</strong> Knowledge transfer and training at client site likely requires Employment Visa, not just Business Visa</li><li><strong>Business Visa:</strong> May suffice for meetings at Computacenter offices only</li><li><strong>Processing:</strong> Apply via Indian embassy/BLS; allow 2\u20134 weeks</li><li><strong>Documents:</strong> Invitation letter from Indian entity, employment contract, company letter detailing purpose</li><li><strong>Registration:</strong> FRRO registration required for stays >14 days</li></ul>'
+        },
+        {
+          key: 'pwd', label: 'Posted Worker / PWD', icon: icons.pwd,
+          status: 'green', statusLabel: 'N/A',
+          summary: 'Not applicable. India is not subject to EU Posted Workers Directive requirements.',
+          details: '<ul><li>The Posted Workers Directive applies only within the EU/EEA</li><li>India has its own labour laws but no bilateral posted worker notification requirements with Germany</li><li>Local Indian labour law compliance may apply if working on client site \u2014 consult local counsel</li></ul>'
+        },
+        {
+          key: 'socsec', label: 'Social Security', icon: icons.socsec,
+          status: 'amber', statusLabel: 'Review needed',
+          summary: 'India\u2013Germany bilateral social security agreement may apply. Certificate of Coverage may be required.',
+          details: '<ul><li><strong>Agreement:</strong> India\u2013Germany Social Security Agreement in force since 2009</li><li><strong>Coverage:</strong> Applies to pension/old-age benefits</li><li><strong>CoC:</strong> Obtain Certificate of Coverage from Deutsche Rentenversicherung to avoid dual contributions to Indian EPFO</li><li><strong>Duration:</strong> Agreement covers postings up to 48 months</li><li><strong>Note:</strong> Does not cover all branches of social security \u2014 health insurance may need separate arrangement</li></ul>'
+        },
+        {
+          key: 'tax', label: 'Tax & Payroll', icon: icons.tax,
+          status: 'red', statusLabel: 'Action required',
+          summary: 'Indian tax filing likely required for work days. Potential PE risk if working at client site.',
+          details: '<ul><li><strong>Tax filing:</strong> Indian income tax filing likely required for compensation attributable to Indian work days</li><li><strong>Treaty:</strong> India\u2013Germany DTAA applies \u2014 183-day rule may exempt if below threshold, but client site work complicates this</li><li><strong>PE risk:</strong> Working at a client site for extended periods could create Permanent Establishment (PE) risk for Computacenter</li><li><strong>Withholding:</strong> Indian entity may be required to withhold tax on payments</li><li><strong>Recommendations:</strong><ul><li>Track actual India work days carefully</li><li>Assess PE risk with tax advisor before travel</li><li>Consider obtaining PAN (Permanent Account Number) if filing required</li></ul></li></ul>'
+        }
+      ]
+    },
+    {
+      id: 'complex-us',
+      tab: '3 \u2014 Complex (US)',
+      title: 'Scenario 3: Complex \u2014 Long-term Project (US)',
+      route: 'UK \u2192 Atlanta & New York (US)',
+      employee: 'UK national',
+      duration: '2 weeks/month, 1+ year',
+      complexity: 'complex',
+      categories: [
+        {
+          key: 'immigration', label: 'Immigration', icon: icons.immigration,
+          status: 'red', statusLabel: 'Work visa needed',
+          summary: 'Work visa required (L-1 or H-1B likely). ESTA is insufficient for this pattern of regular project work.',
+          details: '<ul><li><strong>ESTA insufficient:</strong> Regular, recurring project work and team management over 1+ year is not permitted under Visa Waiver / ESTA</li><li><strong>Recommended visa:</strong> L-1A (Intracompany Transferee \u2014 Manager) or L-1B (Specialised Knowledge)</li><li><strong>Alternative:</strong> H-1B (Specialty Occupation) if L-1 criteria not met</li><li><strong>Sponsorship:</strong> Computacenter US entity must file petition with USCIS</li><li><strong>Processing time:</strong> 3\u20136 months standard; premium processing available (~15 days) for additional fee</li><li><strong>Key risk:</strong> Travelling on ESTA for this activity pattern could result in denial of entry / visa fraud allegations</li></ul>'
+        },
+        {
+          key: 'pwd', label: 'Posted Worker / PWD', icon: icons.pwd,
+          status: 'green', statusLabel: 'N/A',
+          summary: 'Not applicable. The US is not subject to EU Posted Workers Directive requirements.',
+          details: '<ul><li>Posted Workers Directive does not apply outside EU/EEA</li><li>US labour law compliance (FLSA, state laws) applies once working under a US visa</li><li>Prevailing wage requirements apply under L-1/H-1B visa conditions</li></ul>'
+        },
+        {
+          key: 'socsec', label: 'Social Security', icon: icons.socsec,
+          status: 'amber', statusLabel: 'CoC needed',
+          summary: 'UK\u2013US Totalization Agreement applies. Certificate of Coverage required to avoid dual FICA/NI contributions.',
+          details: '<ul><li><strong>Agreement:</strong> UK\u2013US Totalization Agreement in force</li><li><strong>Certificate of Coverage:</strong> Required from HMRC to continue UK NI and avoid US FICA</li><li><strong>Duration:</strong> Covers temporary postings up to 5 years</li><li><strong>Application:</strong> Form CA/NI8 to HMRC National Insurance Contributions Office</li><li><strong>Processing time:</strong> 4\u20138 weeks recommended lead time</li><li><strong>Ongoing:</strong> With 1+ year assignment, monitor whether assignment becomes "permanent" for social security purposes</li></ul>'
+        },
+        {
+          key: 'tax', label: 'Tax & Payroll', icon: icons.tax,
+          status: 'red', statusLabel: 'Action required',
+          summary: 'Federal + multi-state filing required. Shadow payroll, SSN, and withholding obligations in NY and GA.',
+          details: '<div class="detail-section"><div class="detail-section-title">Federal</div><ul><li>US federal income tax filing required</li><li>SSN required (obtainable with work visa)</li><li>Shadow payroll required \u2014 or local US payroll if on US entity</li></ul></div><div class="detail-section"><div class="detail-section-title">New York</div><ul><li>NY state filing required \u2014 NY does not recognise treaty exemptions at state level</li><li>NY withholding required if employee works >14 days in NY</li><li>NY applies the "convenience of the employer" rule \u2014 may tax more days than physically present</li></ul></div><div class="detail-section"><div class="detail-section-title">Georgia</div><ul><li>GA state filing required</li><li>GA withholding required if works >23 days in GA</li><li>GA-source income based on duty days ratio</li></ul></div><div class="detail-section"><div class="detail-section-title">Crowe recommendation</div><ul><li>Apply for SSN immediately upon work visa approval</li><li>Set up US shadow payroll before first travel</li><li>Maintain detailed day-by-day presence log per state</li><li>UK\u2013US treaty may reduce federal burden but state filing still required</li><li>Consider tax equalisation policy for employee</li></ul></div>'
+        }
+      ]
+    },
+    {
+      id: 'complex-eu',
+      tab: '4 \u2014 Complex (EU)',
+      title: 'Scenario 4: Complex \u2014 Multi-country Maintenance (EU)',
+      route: 'UK \u2192 Paris, Frankfurt & Antwerp',
+      employee: 'UK national (post-Brexit)',
+      duration: '3\u20135 days each, ad hoc across 12 months',
+      complexity: 'complex',
+      categories: [
+        {
+          key: 'immigration', label: 'Immigration', icon: icons.immigration,
+          status: 'amber', statusLabel: 'Review needed',
+          summary: 'Schengen 90/180 covers presence, but work authorisation may be required in each country for IT maintenance.',
+          details: '<div class="detail-section"><div class="detail-section-title">Schengen</div><ul><li>UK nationals may stay 90 days in any 180-day period across the Schengen Area without a visa</li><li>This covers physical presence but <strong>not</strong> the right to work</li></ul></div><div class="detail-section"><div class="detail-section-title">Germany (from Tanel/Fragomen)</div><ul><li>IT maintenance work may require work authorisation</li><li>Not exempt under \u00a719 BeschVO (independent of qualification) or \u00a729 BeschVO (ICT)</li><li>Posting notification (Meldung) may be required to Bundesagentur f\u00fcr Arbeit</li></ul></div><div class="detail-section"><div class="detail-section-title">France</div><ul><li>UK nationals post-Brexit need to assess if activity qualifies as "service provision" vs. employment</li><li>Short-term service provision may fall under EU-UK TCA provisions</li><li>French work permit may be needed if activities go beyond permitted business visitor scope</li></ul></div><div class="detail-section"><div class="detail-section-title">Belgium</div><ul><li>Similar considerations as France for UK nationals</li><li>Work permit B or Single Permit may be required</li><li>Certain exemptions exist for short-term technical specialists</li></ul></div>'
+        },
+        {
+          key: 'pwd', label: 'Posted Worker / PWD', icon: icons.pwd,
+          status: 'red', statusLabel: 'Multi-country',
+          summary: 'PWD notifications required in all three EU countries. Each has specific CBA, exemptions, and declaration rules.',
+          details: '<div class="detail-section"><div class="detail-section-title">Germany (from Tanel)</div><ul><li>PWN (Posted Worker Notification) may not be required unless Electrical Trade CBA applies</li><li>If classified as pure ICT services: minimum wage \u20ac13.90/hr applies</li><li>If CBA applies: higher rates and additional conditions (working time, leave)</li></ul></div><div class="detail-section"><div class="detail-section-title">Belgium (from Tanel)</div><ul><li><strong>Limosa declaration</strong> required before posting begins (unless exempt)</li><li>Possible exemptions: initial installation &lt;8 days; urgent repair &lt;5 days/month</li><li>JC 200 (Joint Committee for White-Collar Workers) applies for ICT workers</li><li>Mandatory Belgian minimum terms and conditions apply</li></ul></div><div class="detail-section"><div class="detail-section-title">France (from Tanel)</div><ul><li><strong>SIPSI notification</strong> required before start of work</li><li>SYNTEC CBA (IDCC 1486) applies to IT/consulting workers</li><li>Must designate a representative in France</li><li>Keep payslip translations and employment docs on site</li></ul></div>'
+        },
+        {
+          key: 'socsec', label: 'Social Security', icon: icons.socsec,
+          status: 'amber', statusLabel: 'A1 required',
+          summary: 'A1 Certificate required for all three EU countries to maintain UK social security coverage.',
+          details: '<ul><li><strong>A1 Certificate:</strong> Required under EU Regulation 883/2004 (extended to UK nationals via TCA Protocol on Social Security Coordination)</li><li><strong>Application:</strong> HMRC issues the A1 \u2014 apply via form CA8421 or online</li><li><strong>Coverage:</strong> Proves UK NI continues; avoids local social security in DE/FR/BE</li><li><strong>Multi-state:</strong> If working across multiple EU states, apply under Art. 13 (activity in two or more Member States)</li><li><strong>Carry on site:</strong> A1 must be available at each work location for inspection</li><li><strong>Processing:</strong> Allow 4\u20138 weeks; apply well before first trip</li><li><strong>Risk if missing:</strong> Local authorities can demand social security contributions + penalties</li></ul>'
+        },
+        {
+          key: 'tax', label: 'Tax & Payroll', icon: icons.tax,
+          status: 'amber', statusLabel: 'Review needed',
+          summary: 'Potential filing obligations in each country depending on day-count thresholds and treaty provisions.',
+          details: '<div class="detail-section"><div class="detail-section-title">General</div><ul><li>UK\u2013Germany, UK\u2013France, and UK\u2013Belgium DTAAs all contain 183-day rules</li><li>With 3\u20135 day visits, unlikely to exceed 183 days in any single country</li><li>However, each country has its own domestic thresholds and administrative requirements</li></ul></div><div class="detail-section"><div class="detail-section-title">Germany</div><ul><li>183-day rule under DTAA likely protects from tax filing if below threshold</li><li>However, wage tax registration may be triggered even for short postings</li></ul></div><div class="detail-section"><div class="detail-section-title">France</div><ul><li>Short-term business visitors may be exempt under DTAA Art. 15</li><li>Administrative filing obligations may still exist (SIPSI is primarily for PWD but has payroll implications)</li></ul></div><div class="detail-section"><div class="detail-section-title">Belgium</div><ul><li>Belgium applies strict 183-day counting rules</li><li>Limosa declaration satisfies some administrative obligations</li><li>Monitor cumulative days across all visits in any 12-month period</li></ul></div><div class="detail-section"><div class="detail-section-title">Recommendations</div><ul><li>Track days per country on a rolling 12-month basis</li><li>Engage local tax advisors in each jurisdiction before recurring travel begins</li><li>Consider whether shadow payroll is needed for any country</li></ul></div>'
+        }
+      ]
+    }
+  ];
+
+  /* ── Build Tabs ────────────────────────────── */
+  var tabContainer = document.getElementById('scenarioTabs');
+  scenarios.forEach(function(s, i) {
+    var btn = document.createElement('button');
+    btn.className = 'scenario-tab' + (i === 0 ? ' active' : '');
+    btn.textContent = s.tab;
+    btn.setAttribute('data-index', i);
+    btn.addEventListener('click', function() {
+      setScenario(i);
+    });
+    tabContainer.appendChild(btn);
+  });
+
+  /* ── Render Scenario ──────────────────────── */
+  function setScenario(index) {
+    var s = scenarios[index];
+
+    // Update tabs
+    var tabs = tabContainer.querySelectorAll('.scenario-tab');
+    tabs.forEach(function(t, i) {
+      t.classList.toggle('active', i === index);
+    });
+
+    // Header
+    var badgeClass = s.complexity === 'simple' ? 'badge-simple' :
+                     s.complexity === 'intermediate' ? 'badge-intermediate' : 'badge-complex';
+    document.getElementById('scenarioHeader').innerHTML =
+      '<div>' +
+        '<div class="scenario-title">' + s.title + '</div>' +
+        '<div class="scenario-meta">' +
+          '<span>' + s.route + '</span>' +
+          '<span class="dot"></span>' +
+          '<span>' + s.employee + '</span>' +
+          '<span class="dot"></span>' +
+          '<span>' + s.duration + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<span class="scenario-badge ' + badgeClass + '">' + s.complexity + '</span>';
+
+    // Grid
+    var grid = document.getElementById('complianceGrid');
+    grid.innerHTML = '';
+
+    s.categories.forEach(function(cat, ci) {
+      var card = document.createElement('div');
+      card.className = 'compliance-card';
+
+      var detailId = 'detail-' + s.id + '-' + cat.key;
+
+      card.innerHTML =
+        '<div class="card-top-bar ' + cat.status + '"></div>' +
+        '<div class="card-header">' +
+          '<div class="card-icon ' + cat.status + '">' + cat.icon + '</div>' +
+          '<span class="card-category">' + cat.label + '</span>' +
+          '<span class="card-status-pill ' + cat.status + '">' + cat.statusLabel + '</span>' +
+        '</div>' +
+        '<div class="card-summary">' + cat.summary + '</div>' +
+        '<button class="detail-toggle" aria-expanded="false" aria-controls="' + detailId + '">' +
+          '<span>Details</span>' +
+          '<span class="chevron" aria-hidden="true">&#9660;</span>' +
+        '</button>' +
+        '<div class="detail-body" id="' + detailId + '">' +
+          '<div class="detail-content">' + cat.details + '</div>' +
+        '</div>';
+
+      // Toggle handler
+      var toggle = card.querySelector('.detail-toggle');
+      var body = card.querySelector('.detail-body');
+      toggle.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        body.classList.toggle('open');
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  /* ── Init ──────────────────────────────────── */
+  var urlParams = new URLSearchParams(window.location.search);
+  var initialScenario = parseInt(urlParams.get('scenario') || '0', 10);
+  if (initialScenario < 0 || initialScenario > 3) initialScenario = 0;
+  setScenario(initialScenario);
+});
+</script>
+</body>
+</html>
